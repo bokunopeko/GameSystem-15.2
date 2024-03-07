@@ -18,10 +18,11 @@ public class ThirdPersonCamera : MonoBehaviour
 
     //what the camera should try to zoom to right now
     private float idealCameraZoom;
+
     //the actual current zoom 
     private float currentZoom;
 
-
+    
 
     private float currentHorizontalRoation, currentVerticalRotation;
     private Transform cameraTranform, boomTransform;

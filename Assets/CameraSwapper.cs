@@ -31,6 +31,7 @@ public class CameraSwapper : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
 
+        SetCamera();
     }
 
 
@@ -45,13 +46,16 @@ public class CameraSwapper : MonoBehaviour
 
     private void ToggleCamera()
     {
+        //if we are currently in First Person mode
         if (currentCameraMode == CameraMode.FirstPerson)
         {
+            //swap th 3rd person mode
             currentCameraMode = CameraMode.ThirdPerson;
         }
         else
         {
-            currentCameraMode = CameraMode.FirstPerson
+            //else, we must be in 3rd person, so swap to 1st person
+            currentCameraMode = CameraMode.FirstPerson;
         }
 
         SetCamera();
@@ -59,6 +63,24 @@ public class CameraSwapper : MonoBehaviour
     
     private void SetCamera()
     {
+        //do somehing diferent depending on th value of the currentCameraMode
+        switch (currentCameraMode)
+        {
+            //if currentcameraMode is CameraMode.FirstPerson...
+            case CameraMode.FirstPerson :
+                firstPersonCamera.depth = 0;
+                firstPersonController.enabled = true;
+                thirdPersonCamera.depth = -1;
+                thirdPersonController.enabled = false;
+                break;
 
+            //if currentCameraMode is CameraMode.ThirdPerson
+            case CameraMode.ThirdPerson :
+                thirdPersonCamera.depth = 0;
+                thirdPersonController.enabled = true;
+                firstPersonCamera.depth = -1;
+                firstPersonController.enabled = false;
+                break;
+        }
     }
 }
