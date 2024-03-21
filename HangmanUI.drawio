@@ -1,0 +1,37 @@
+<mxfile host="app.diagrams.net" modified="2024-03-21T01:50:53.024Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36" etag="e6X8lKnBGTsSEdIV1RY3" version="24.0.2" type="device">
+  <diagram name="Page-1" id="wNOwYICbNdj2XohAN3jj">
+    <mxGraphModel dx="1434" dy="780" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="8m98upuhAAJaAq5NC1CN-3" value="Main Menu" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="30" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="8m98upuhAAJaAq5NC1CN-5" value="Pause Menu" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="354" y="510" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="8m98upuhAAJaAq5NC1CN-10" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="590" width="780" height="540" as="geometry" />
+        </mxCell>
+        <mxCell id="8m98upuhAAJaAq5NC1CN-11" value="Resemu" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="214" y="780" width="400" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="8m98upuhAAJaAq5NC1CN-13" value="Return to Main Menu" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="214" y="880" width="400" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="8m98upuhAAJaAq5NC1CN-14" value="Exit" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="214" y="980" width="400" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="8m98upuhAAJaAq5NC1CN-15" value="" style="whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="20" y="90" width="780" height="410" as="geometry" />
+        </mxCell>
+        <mxCell id="8m98upuhAAJaAq5NC1CN-16" value="Play" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="350" y="170" width="120" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="8m98upuhAAJaAq5NC1CN-17" value="Exit" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="354" y="270" width="120" height="60" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
