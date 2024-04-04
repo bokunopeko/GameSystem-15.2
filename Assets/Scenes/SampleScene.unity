@@ -501,10 +501,10 @@ GameObject:
   - component: {fileID: 629707119}
   - component: {fileID: 629707118}
   - component: {fileID: 629707117}
-  - component: {fileID: 629707124}
   - component: {fileID: 629707125}
-  - component: {fileID: 629707126}
   - component: {fileID: 629707127}
+  - component: {fileID: 629707129}
+  - component: {fileID: 629707130}
   m_Layer: 0
   m_Name: Capsule
   m_TagString: Untagged
@@ -621,7 +621,7 @@ Transform:
   m_GameObject: {fileID: 629707116}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.34, y: 3.81, z: -1.83}
+  m_LocalPosition: {x: 2.34, y: 2.38, z: -11.19}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -629,27 +629,6 @@ Transform:
   - {fileID: 137496278}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &629707124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629707116}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 27a2cd62bcdd6e94e9f7a54724787405, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkSpeed: 3
-  runSpeed: 5
-  crouchSpeed: 1
-  jumpPower: 2
-  gravity: 1
-  groundedMask:
-    serializedVersion: 2
-    m_Bits: 0
-  cameraTransform: {fileID: 670433382}
 --- !u!114 &629707125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -664,30 +643,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firstPersonCamera: {fileID: 1125705575}
   thirdPersonCamera: {fileID: 963194227}
-  firstPersonController: {fileID: 629707126}
-  thirdPersonController: {fileID: 629707124}
   currentCameraMode: 0
---- !u!114 &629707126
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 629707116}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 500f84bb5041b5f4382bf8a7264c9689, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  walkSpeed: 2
-  runSpeed: 2
-  crouchSpeed: 2
-  jumpPower: 2
-  gravity: 0
-  groundedMask:
-    serializedVersion: 2
-    m_Bits: 0
-  cameraTransform: {fileID: 1125705576}
 --- !u!114 &629707127
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -704,6 +660,45 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 4294967295
   MaxDistance: 0
+--- !u!114 &629707129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629707116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac48a46492dbfa8448ab16f1a0cf0dd7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  hitLayel:
+    serializedVersion: 2
+    m_Bits: 64
+  MaxDistance: 100
+--- !u!114 &629707130
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 629707116}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f399b80d067fff4429f864c18681af9d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  walkSpeed: 10
+  runSpeed: 20
+  crouchSpeed: 5
+  jumpPower: 10
+  gravity: 1
+  groundedMask:
+    serializedVersion: 2
+    m_Bits: 64
+  maxGrappleSpeed: 100
+  groundedAllowance: 0.05
+  walkAngle: 40
 --- !u!1 &670433380
 GameObject:
   m_ObjectHideFlags: 0
@@ -1574,7 +1569,7 @@ Transform:
   m_GameObject: {fileID: 1338476625}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.27, y: -0, z: 0.23}
+  m_LocalPosition: {x: -0.27, y: -2.08, z: 0.23}
   m_LocalScale: {x: 5.71, y: 5.71, z: 5.71}
   m_ConstrainProportionsScale: 1
   m_Children: []

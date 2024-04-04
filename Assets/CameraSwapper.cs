@@ -7,8 +7,8 @@ public class CameraSwapper : MonoBehaviour
 {
     [SerializeField] private Camera firstPersonCamera;
     [SerializeField] private Camera thirdPersonCamera;
-    [SerializeField] private FirstPersonController firstPersonController;
-    [SerializeField] private ThirdPersonController thirdPersonController;
+    //[SerializeField] private FirstPersonController firstPersonController;
+    //[SerializeField] private ThirdPersonController thirdPersonController;
 
 
     public enum CameraMode
@@ -21,8 +21,8 @@ public class CameraSwapper : MonoBehaviour
 
     void Start()
     {
-        firstPersonController = GetComponent<FirstPersonController>();
-        thirdPersonController = GetComponent<ThirdPersonController>();
+        //firstPersonController = GetComponent<FirstPersonController>();
+        //thirdPersonController = GetComponent<ThirdPersonController>();
 
         //find the camera scripts first, and get the component off the same object
         firstPersonCamera = FindObjectOfType<FirstPersonCamera>().GetComponent<Camera>();
@@ -69,17 +69,17 @@ public class CameraSwapper : MonoBehaviour
             //if currentcameraMode is CameraMode.FirstPerson...
             case CameraMode.FirstPerson :
                 firstPersonCamera.depth = 0;
-                firstPersonController.enabled = true;
+                //firstPersonController.enabled = true;
                 thirdPersonCamera.depth = -1;
-                thirdPersonController.enabled = false;
+                //thirdPersonController.enabled = false;
                 break;
 
             //if currentCameraMode is CameraMode.ThirdPerson
             case CameraMode.ThirdPerson :
                 thirdPersonCamera.depth = 0;
-                thirdPersonController.enabled = true;
+                //thirdPersonController.enabled = true;
                 firstPersonCamera.depth = -1;
-                firstPersonController.enabled = false;
+                //firstPersonController.enabled = false;
                 break;
         }
     }
@@ -94,5 +94,8 @@ public class CameraSwapper : MonoBehaviour
         return thirdPersonCamera;
     }
 
-
+    public CameraMode GetCameraMode()
+    {
+        return currentCameraMode;
+    }
 }

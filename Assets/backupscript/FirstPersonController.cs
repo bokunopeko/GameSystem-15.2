@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class FirstPersonController : CustomController
+public class FirstPersonControllerbackup : CustomController
 {
     [SerializeField] private Transform cameraTransform;
     protected override void Move(Vector3 direction)

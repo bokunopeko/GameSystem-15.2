@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ThirdPersonController : CustomController
+public class ThirdPersonControllerbackup : CustomController
 {
     [SerializeField] private Transform cameraTransform;
 
