@@ -4,8 +4,18 @@ using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class CustomController : MonoBehaviour
 {
+    public enum State
+    {
+        Idle,
+        Walk,
+        Jump,
+        Grapple
+    }
+    [SerializeField] private State currentState;
+
     [SerializeField] private float walkSpeed;
     [SerializeField] private float runSpeed;
     [SerializeField] private float crouchSpeed;
@@ -39,42 +49,225 @@ public class CustomController : MonoBehaviour
 
     private float currentGrappleSpeed;
 
+    private GappleLine grappleLine;
+
     private Vector3 grapplePoint = new Vector3();
 
 
 
     void Start()
     {
+        //week 10 2:49:00
+        grappleLine = GetComponentInChildren<GappleLine>(); 
         rb = GetComponent<Rigidbody>();
         cameraSwapper = GetComponent<CameraSwapper>();
+        NextState();
     }
 
-   
+    private void NextState()
+    {
+        switch (currentState)
+        {
+            case State.Idle:
+                StartCoroutine("IdleState");
+                break;
+            case State.Walk:
+                StartCoroutine("WalkState");
+                break;
+            case State.Jump:
+                StartCoroutine("JumpState");
+                break;
+            case State.Grapple:
+                StartCoroutine("GrappleState");
+                break;
+        }
+    }
+
+    private void ChangeState(State newState)
+    {
+        currentState = newState;
+    }
+
+    #region State Coroutines
+
+    IEnumerator IdleState()
+    {
+        //Enter idle
+        Move(Vector3.zero); 
+        while ( currentState == State.Idle )
+        {
+            //stay in idle
+            if (!IsGrounded())
+            {
+                ChangeState(State.Jump);
+
+            }
+            else
+            {
+                if(inputThisFrame.magnitude != 0)
+                {
+                    ChangeState(State.Walk);
+                }
+                if (Input.GetButton("Jump"))
+                {
+                    AscendAt(jumpPower);
+                }
+            }
+            //reuten null for now, continue next frame
+            yield return null;
+
+        }
+        //Exit idle
+        NextState();
+    }
+
+    IEnumerator WalkState()
+    {
+        //enter walk
+        while (currentState == State.Walk )
+        {
+            //stay in walk
+            movementThisFrame = new Vector3();
+
+            movementThisFrame.x = inputThisFrame.x;
+            movementThisFrame.z = inputThisFrame.y;
+
+            float speedThisFrame = walkSpeed;
+
+
+
+            if (Input.GetButton("Sprint"))
+            {
+                speedThisFrame = runSpeed;
+            }
+            else
+                if (Input.GetButton("Crouch"))
+            {
+                speedThisFrame = crouchSpeed;
+            }
+
+
+            //convert movement from global to local
+            movementThisFrame = TransformDirection(movementThisFrame);
+
+            //check if we're trying to move, and if theat move is valid
+            if (inputThisFrame.magnitude > 0 && ValidateDirection(movementThisFrame))
+            {
+                //if so, increase  hhorziontal speed 
+                horizontalSpeed = Mathf.MoveTowards(horizontalSpeed, speedThisFrame, runSpeed * Time.deltaTime);
+            }
+
+
+            else
+            { //decrease horizontal speed 
+                horizontalSpeed = Mathf.MoveTowards(horizontalSpeed, 0, runSpeed * Time.deltaTime);
+            }
+
+            //multiply the direction by our horizontal speed
+            movementThisFrame *= horizontalSpeed;
+
+            //check if we;re on the ground
+            if (IsGrounded())  // <- remember, isGrounded() will result in true or false 
+            {
+                if (horizontalSpeed == 0)
+                {
+                    ChangeState(State.Idle);
+                }
+              
+                if (Input.GetButton("Jump"))
+                {
+                    //move upwards based on our jump power
+                    AscendAt(jumpPower);
+                }
+            }
+            else
+            {
+                ChangeState(State.Jump);
+            }
+
+            Move(movementThisFrame);
+            yield return null;
+        }
+        //Exit walk 
+        NextState();
+    }
+
+    IEnumerator JumpState()
+    {
+        //enter jump
+        while ( currentState == State.Jump )
+        {
+            //stay in jump
+
+            movementThisFrame = new Vector3();
+            
+            movementThisFrame.x = inputThisFrame.x;
+            movementThisFrame.y = inputThisFrame.y;
+
+            movementThisFrame = TransformDirection(movementThisFrame);
+
+            movementThisFrame *= horizontalSpeed;
+
+            verticalSpeed -= gravity * Time.deltaTime;
+
+            movementThisFrame.y = verticalSpeed;
+
+            Move(movementThisFrame);
+
+            if (verticalSpeed <0 && IsGrounded())
+            {
+                ChangeState(State.Walk);
+            }
+
+            yield return null;
+        }
+        //exit jump
+        NextState();
+    }
+
+    IEnumerator GrappleState()
+    {
+        //enter grapple
+
+        grappleLine.StartGrapple(grapplePoint);
+
+        while ( currentState == State.Grapple )
+        {
+
+            manageActiveGrapple();
+
+            if (Input.GetButtonUp("Grapple"))
+            {
+                EndGrapple();
+            }
+            //stay in grapple
+            yield return null;
+        }
+        grappleLine.EndGrapple();
+        //exit grappple
+        NextState();
+    }
+
+
+    #endregion
+
+
+
     void Update()
     {
         inputThisFrame = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         inputThisFrame.Normalize();
 
-        if(Input.GetMouseButtonDown(0))
+        if(Input.GetButtonDown("Grapple"))
         {
            TryToGrapple();
         }
+    }
 
-        if (Input.GetMouseButtonUp(0))
-        {
-            EndGrapple();
-        }
-
-        if ( isGrappling  )
-        {
-            manageActiveGrapple();
-        }
-        else
-        {
-            ManageNormalMovement();
-        }
-
-        ManageNormalMovement();
+    private void AscendAt(float jumpSpeed)
+    {
+        verticalSpeed = jumpSpeed;
+        ChangeState(State.Jump);
     }
 
     private void TryToGrapple()
@@ -91,7 +284,10 @@ public class CustomController : MonoBehaviour
 
     private void StartGrapple()
     {
-        isGrappling = true; 
+        verticalSpeed = 0;
+        horizontalSpeed = 0;
+
+       ChangeState(State.Grapple);
     }
 
     private void manageActiveGrapple()
@@ -126,6 +322,7 @@ public class CustomController : MonoBehaviour
         grapplePoint = Vector3 .zero ;
         currentGrappleSpeed = 0;
         rb.velocity = Vector3.zero ;
+        ChangeState(State.Jump) ;
     }
 
     virtual protected void Move(Vector3 direction)
@@ -135,63 +332,7 @@ public class CustomController : MonoBehaviour
 
     private void ManageNormalMovement()
     {
-        movementThisFrame = new();
-
-        movementThisFrame.x = inputThisFrame.x;
-        movementThisFrame.z = inputThisFrame.y;
-
-        float speedThisFrame = walkSpeed;
-
-        if (IsGrounded())
-        {
-            if (Input.GetButton("Sprint"))
-            {
-                speedThisFrame = runSpeed;
-            }
-            else
-                if (Input.GetButton("Crouch"))
-            {
-                speedThisFrame = crouchSpeed;
-            }
-        }
-
-        //convert movement from global to local
-        movementThisFrame = TransformDirection(movementThisFrame);
-
-        //check if we're trying to moce, and if theat move is valid
-        if (inputThisFrame.magnitude > 0 && ValidateDirection(movementThisFrame))
-        {
-            //if so, increase  hhorziontal speed 
-            horizontalSpeed = Mathf.MoveTowards(horizontalSpeed, speedThisFrame, runSpeed * Time.deltaTime);
-        }
-
-
-        else
-        { //decrease horizontal speed 
-            horizontalSpeed = Mathf.MoveTowards(horizontalSpeed, 0, runSpeed * Time.deltaTime);
-        }
-
-        //multiply the direction by our horizontal speed
-        movementThisFrame *= horizontalSpeed;
-
-        //maintain current vertical speed, and apply gravity
-        verticalSpeed -= gravity * Time.deltaTime;
-
-        //check if we;re on the ground
-        if (IsGrounded())  // <- remember, isGrounded() will result in true or false 
-        {
-            verticalSpeed = Mathf.Clamp(verticalSpeed, 0, float.PositiveInfinity);
-
-            if (Input.GetButton("Jump"))
-            {
-                //moce upwards based on our jump power
-                verticalSpeed = jumpPower;
-            }
-        }
-        movementThisFrame.y = verticalSpeed;
-
-
-        Move(movementThisFrame);
+       
     }
 
 

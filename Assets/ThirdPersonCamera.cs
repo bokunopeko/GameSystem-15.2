@@ -11,6 +11,8 @@ public class ThirdPersonCamera : MonoBehaviour
     //these will preven the camera from rotating
     [SerializeField] private float verticalRotationMin,  verticalRotationMax;
 
+    [SerializeField] private float scopeZoomSpeed = 40f;
+    [SerializeField] private float zoomOutSpeed = 1f;
 
     [SerializeField] private float cameraZoom;
 
@@ -20,7 +22,7 @@ public class ThirdPersonCamera : MonoBehaviour
     private float idealCameraZoom;
 
     //the actual current zoom 
-    private float currentZoom;
+    private float currentCameraZoom;
 
     
 
@@ -70,17 +72,28 @@ public class ThirdPersonCamera : MonoBehaviour
         if(Physics.Raycast(playerTransform.position, directionToCamera, out RaycastHit hit,cameraZoom, avoidLayer))
         {
             //zoom the camera in to be on the other side of the wall
-            currentZoom = hit.distance; 
+            currentCameraZoom = hit.distance; 
 
         }
         else 
         {
             //return to our default zoom
-            currentZoom = cameraZoom;
+            currentCameraZoom = Mathf.MoveTowards(currentCameraZoom, idealCameraZoom, zoomOutSpeed * Time.deltaTime);
 
         }
-        
-        cameraTranform.localPosition = new Vector3(0, 0, -currentZoom);
 
+        transform.position = playerTransform.position;
+
+        Vector3 cameraTargetPosition = new Vector3();
+        if (Input.GetButton("Scope"))
+        {
+            cameraTargetPosition = Vector3.MoveTowards(cameraTranform.localPosition, new Vector3(1, 0, -cameraZoom / 10f), scopeZoomSpeed * Time.deltaTime);
+        }
+        else
+        {
+            cameraTargetPosition = Vector3.MoveTowards(cameraTranform.localPosition, new Vector3(0, 0, -cameraZoom / 10f), scopeZoomSpeed * Time.deltaTime);
+        }
+
+        cameraTranform.localPosition = cameraTargetPosition;
     }
 }
