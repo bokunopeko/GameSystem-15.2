@@ -5,7 +5,7 @@ using UnityEditor;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
-public class CustomController : MonoBehaviour
+public class CustomController : CombatAgent
 {
     public enum State
     {
@@ -262,6 +262,11 @@ public class CustomController : MonoBehaviour
         {
            TryToGrapple();
         }
+
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            TakeDamage(50);
+        }
     }
 
     private void AscendAt(float jumpSpeed)
@@ -425,5 +430,13 @@ public class CustomController : MonoBehaviour
         }
         //else it is valid
         return false;
+    }
+
+
+    //override = do this behaviour instead of my parents behaviour
+    protected override void EndOfLife()
+    {
+        //gameover stuff, maybe
+        Debug.Log("game over!");
     }
 }
