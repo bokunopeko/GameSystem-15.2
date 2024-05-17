@@ -7,7 +7,7 @@ public class EnemyGun : MonoBehaviour
     [SerializeField] protected float damage;
     protected ParticleSystem psysWeapon;
 
-    private void Start()
+    protected virtual  void Start()
     {
         psysWeapon = GetComponent<ParticleSystem>();
     }

@@ -9,9 +9,17 @@ public class PlayerGun : HitScanFromScreen
     //how much the gun cost to use
     [SerializeField] private float cost;
 
+    private CustomController player;
+
+    protected override void Start()
+    {
+        base.Start();
+        player = GetComponent<CustomController>();
+    }
+
     private void Update()
     {
-        if (Input.GetButtonDown("Shoot"))
+        if (Input.GetButtonDown("Shoot") && player.TryToUseStamina(cost))
         {
             Shoot();
         }

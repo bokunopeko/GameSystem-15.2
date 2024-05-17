@@ -14,6 +14,11 @@ public class CustomController : CombatAgent
         Jump,
         Grapple
     }
+
+    [SerializeField] private float staminaCurrent, staminaMax = 100, staminaRunCost = 10, staminaRechargeAmount = 20, staminaRechargeDelay = 1.5f;
+    private float staminaTimeLastUsed;
+
+
     [SerializeField] private State currentState;
 
     [SerializeField] private float walkSpeed;
@@ -53,6 +58,7 @@ public class CustomController : CombatAgent
 
     private Vector3 grapplePoint = new Vector3();
 
+    private PlayerUI playerUI;
 
 
     void Start()
@@ -61,6 +67,8 @@ public class CustomController : CombatAgent
         grappleLine = GetComponentInChildren<GappleLine>(); 
         rb = GetComponent<Rigidbody>();
         cameraSwapper = GetComponent<CameraSwapper>();
+        staminaCurrent = staminaMax;
+        playerUI =FindObjectOfType<PlayerUI>();
         NextState();
     }
 
@@ -136,7 +144,7 @@ public class CustomController : CombatAgent
 
 
 
-            if (Input.GetButton("Sprint"))
+            if (Input.GetButton("Sprint") && TryToUseStamina(staminaRunCost * Time.deltaTime))
             {
                 speedThisFrame = runSpeed;
             }
@@ -258,12 +266,20 @@ public class CustomController : CombatAgent
         inputThisFrame = new Vector2(Input.GetAxis("Horizontal"), Input.GetAxis("Vertical"));
         inputThisFrame.Normalize();
 
+        if(Time.time > staminaTimeLastUsed + staminaRechargeDelay)
+        {
+            staminaCurrent = Mathf.Clamp(staminaCurrent + staminaRechargeAmount * Time.deltaTime, 0, staminaMax);
+        }
+
+        playerUI.UpdateHUD(healthCurrent/ healthMax, staminaCurrent/ staminaMax);
+
         if(Input.GetButtonDown("Grapple"))
         {
            TryToGrapple();
         }
 
         if (Input.GetKeyDown(KeyCode.L))
+
         {
             TakeDamage(50);
         }
@@ -439,4 +455,18 @@ public class CustomController : CombatAgent
         //gameover stuff, maybe
         Debug.Log("game over!");
     }
+
+    public bool TryToUseStamina(float cost)
+    {
+
+        if(staminaCurrent == 0 )
+        {
+            return false;
+        }
+
+        staminaCurrent = Mathf.Clamp(staminaCurrent - cost, 0, staminaMax);
+        staminaTimeLastUsed = Time.time;
+        return true;
+    }
+
 }
